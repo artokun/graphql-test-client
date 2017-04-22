@@ -1,10 +1,16 @@
 const express = require('express');
+const cors = require('cors')
 const models = require('./models');
 const expressGraphQL = require('express-graphql');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const schema = require('./schema/schema');
 require('dotenv').config()
+
+var corsOptions = {
+  origin: 'http://localhost:8080',
+  optionsSuccessStatus: 200
+}
 
 const app = express();
 
@@ -21,6 +27,9 @@ mongoose.connection
     .on('error', error => console.log('Error connecting to MongoLab:', error));
 
 app.use(bodyParser.json());
+app.use(cors(corsOptions))
+
+app.options('/graphql')
 app.use('/graphql', expressGraphQL({
   schema,
   graphiql: true
